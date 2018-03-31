@@ -1,4 +1,4 @@
-![PICO-Tween](img/logo.png)
+![PICO-Tween](img/logo.gif)
 
 PICO-Tween is a port of the easing functions developed by Robert Penner. This port was based on the Lua port by EmmanuelOga 
 and optimised to suit the PICO-8 by refactoring to remove unnecessary tokens and making it compatible with the way the PICO-8
@@ -96,3 +96,9 @@ Here are some example gifs:
 ![Bounce Out](img/bounce-out.gif)
 
 ![Out In Cubic](img/out-in-cubic.gif)
+
+## Credits
+
+This library port wouldn't have been possible without the original easings functions by [Robert Penner.](http://robertpenner.com/easing/)
+
+It also wouldn't have been anywhere near as easy without the Lua port for the functions by [EmmanuelOga](https://github.com/EmmanuelOga/easing)
