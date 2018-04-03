@@ -1,7 +1,6 @@
 pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
-
 ------------
 -- PICO-Tween -
 -- A small library of tweening/easing
@@ -38,6 +37,41 @@ pi = 3.14
 cos1 = cos function cos(angle) return cos1(angle/(3.1415*2)) end
 --- Sin now uses radians
 sin1 = sin function sin(angle) return sin1(-angle/(3.1415*2)) end
+
+--- Implementation of asin.
+-- Source converted from 
+-- http://developer.download.nvidia.com/cg/asin.html
+function asin(x)
+  local negate = (x < 0 and 1.0 or 0.0)
+  x = abs(x)
+  local ret = -0.0187293
+  ret *= x
+  ret += 0.0742610
+  ret *= x
+  ret -= 0.2121144
+  ret *= x
+  ret += 1.5707288
+  ret = 3.14159265358979*0.5 - sqrt(1.0 - x)*ret
+  return ret - 2 * negate * ret
+end
+
+--- Implementation of acos.
+-- Source converted from 
+-- http://developer.download.nvidia.com/cg/acos.html
+function acos(x)
+  local negate = (x < 0 and 1.0 or 0.0)
+  x = abs(x);
+  local ret = -0.0187293;
+  ret *= x;
+  ret += 0.0742610;
+  ret *= x;
+  ret -= 0.2121144;
+  ret *= x;
+  ret += 1.5707288;
+  ret *= sqrt(1.0-x);
+  ret -= 2 * negate * ret;
+  return negate * 3.14159265358979 + ret;
+end
 
 --- Function for calculating 
 -- exponents to a higher degree
@@ -208,6 +242,69 @@ function outInCirc(t, b, c, d)
   return inCirc((t * 2) - d, b + c / 2, c / 2, d)
 end
 
+function inElastic(t, b, c, d, a, p)
+  if (t == 0) return b
+  t /= d
+  if (t == 1) return b + c
+  p = p or d * 0.3
+  local s
+
+  if not a or a < abs(c) then
+    a = c
+    s = p / 4
+  else
+    s = p / (2 * pi) * asin(c/a)
+  end
+
+  t -= 1
+  return -(a * pow(2, 10 * t) * sin((t * d - s) * (2 * pi) / p)) + b
+end
+
+function outElastic(t, b, c, d, a, p)
+  if (t == 0) return b
+  t /= d
+  if (t == 1) return b + c
+  p = p or d * 0.3
+  local s
+
+  if not a or a < abs(c) then
+    a = c
+    s = p / 4
+  else
+    s = p / (2 * pi) * asin(c/a)
+  end
+
+  return a * pow(2, -10 * t) * sin((t * d - s) * (2 * pi) / p) + c + b
+end
+
+function inOutElastic(t, b, c, d, a, p)
+  if (t == 0) return b
+  t = t / d * 2
+  if (t == 2) return b + c
+  p = p or d * (0.3 * 1.5)
+  a = a or 0
+  local s
+
+  if not a or a < abs(c) then
+    a = c
+    s = p / 4
+  else
+    s = p / (2 * pi) * asin(c / a)
+  end
+
+  if t < 1 then
+    t -= 1
+    return -0.5 * (a * pow(2, 10 * t) * sin((t * d - s) * (2 * pi) / p)) + b
+  end
+  t -= 1
+  return a * pow(2, -10 * t) * sin((t * d - s) * (2 * pi) / p ) * 0.5 + c + b
+end
+
+function outInElastic(t, b, c, d, a, p)
+  if (t < d / 2) return outElastic(t * 2, b, c / 2, d, a, p)
+  return inElastic((t * 2) - d, b + c / 2, c / 2, d, a, p)
+end
+
 function inBack(t, b, c, d, s)
   s = s or 1.70158
   t = t / d
@@ -264,148 +361,155 @@ function outInBounce(t, b, c, d)
 end
 
 --------
--- Tween List and Names
+-- tween list and names
 --------
 
-tweenList = {
+tweenlist = {
   linear,
-  inQuad,
-  outQuad,
-  inOutQuad,
-  outInQuad,
-  inCubic,
-  outCubic,
-  inOutCubic,
-  outInCubic,
-  inQuart,
-  outQuart,
-  inOutQuart,
-  outInQuart,
-  inQuint,
-  outQuint,
-  inOutQuint,
-  outInQuint,
-  inSine,
-  outSine,
-  inOutSine,
-  outInSine,
-  inExpo,
-  outExpo,
-  inOutExpo,
-  outInExpo,
-  inCirc,
-  outCirc,
-  inOutCirc,
-  outInCirc,
-  inBack,
-  outBack,
-  inOutBack,
-  outInBack,
-  inBounce,
-  outBounce,
-  inOutBounce,
-  outInBounce,
+  inquad,
+  outquad,
+  inoutquad,
+  outinquad,
+  incubic,
+  outcubic,
+  inoutcubic,
+  outincubic,
+  inquart,
+  outquart,
+  inoutquart,
+  outinquart,
+  inquint,
+  outquint,
+  inoutquint,
+  outinquint,
+  insine,
+  outsine,
+  inoutsine,
+  outinsine,
+  inexpo,
+  outexpo,
+  inoutexpo,
+  outinexpo,
+  incirc,
+  outcirc,
+  inoutcirc,
+  outincirc,
+  inelastic,
+  outelastic,
+  inoutelastic,
+  outinelastic,
+  inback,
+  outback,
+  inoutback,
+  outinback,
+  inbounce,
+  outbounce,
+  inoutbounce,
+  outinbounce,
 }
 
-tweenNames = {
+tweennames = {
   "linear",
-  "inQuad",
-  "outQuad",
-  "inOutQuad",
-  "outInQuad",
-  "inCubic",
-  "outCubic",
-  "inOutCubic",
-  "outInCubic",
-  "inQuart",
-  "outQuart",
-  "inOutQuart",
-  "outInQuart",
-  "inQuint",
-  "outQuint",
-  "inOutQuint",
-  "outInQuint",
-  "inSine",
-  "outSine",
-  "inOutSine",
-  "outInSine",
-  "inExpo",
-  "outExpo",
-  "inOutExpo",
-  "outInExpo",
-  "inCirc",
-  "outCirc",
-  "inOutCirc",
-  "outInCirc",
-  "inBack",
-  "outBack",
-  "inOutBack",
-  "outInBack",
-  "inBounce",
-  "outBounce",
-  "inOutBounce",
-  "outInBounce",
+  "inquad",
+  "outquad",
+  "inoutquad",
+  "outinquad",
+  "incubic",
+  "outcubic",
+  "inoutcubic",
+  "outincubic",
+  "inquart",
+  "outquart",
+  "inoutquart",
+  "outinquart",
+  "inquint",
+  "outquint",
+  "inoutquint",
+  "outinquint",
+  "insine",
+  "outsine",
+  "inoutsine",
+  "outinsine",
+  "inexpo",
+  "outexpo",
+  "inoutexpo",
+  "outinexpo",
+  "incirc",
+  "outcirc",
+  "inoutcirc",
+  "outincirc",
+  "inelastic",
+  "outelastic",
+  "inoutelastic",
+  "outinelastic",
+  "inback",
+  "outback",
+  "inoutback",
+  "outinback",
+  "inbounce",
+  "outbounce",
+  "inoutbounce",
+  "outinbounce",
 }
 
 --------
--- Main
+-- main
 --------
 
 distance = 50
 duration = 1
 index = 1
-func = tweenList[index]
+func = tweenlist[index]
 
-function downFunc(v)
+function downfunc(v)
   return func(v, 0, distance, duration)
 end
 
-function upFunc(v)
+function upfunc(v)
   return func(v, distance, -distance, duration)
 end
 
-local easeProp = 0
-local timeElapsed = 0
-local currentFunc = downFunc
-local lastTime = time()
+local easeprop = 0
+local timeelapsed = 0
+local currentfunc = downfunc
+local lasttime = time()
 local dt = 0
 
 function _update()
   t = time()
-  dt = t - lastTime
-  lastTime = t
-  timeElapsed += dt
+  dt = t - lasttime
+  lasttime = t
+  timeelapsed += dt
 
   if btnp(0) then
-    easeProp = 0
-    timeElapsed = 0
+    easeprop = 0
+    timeelapsed = 0
     index -= 1
     if index <= 0 then
-      index = #tweenList
+      index = #tweenlist
     end
-    func = tweenList[index]
+    func = tweenlist[index]
   elseif btnp(1) then
-    easeProp = 0
-    timeElapsed = 0
+    easeprop = 0
+    timeelapsed = 0
     index += 1
-    if index > #tweenList then
+    if index > #tweenlist then
       index = 1
     end
-    func = tweenList[index]
+    func = tweenlist[index]
   end
 
-  if timeElapsed > duration then
-    timeElapsed = 0
-    if currentFunc == downFunc then currentFunc = upFunc else currentFunc = downFunc end
+  if timeelapsed > duration then
+    timeelapsed = 0
+    if currentfunc == downfunc then currentfunc = upfunc else currentfunc = downfunc end
   end
 
-  easeProp = currentFunc(timeElapsed)
+  easeprop = currentfunc(timeelapsed)
 end
 
 function _draw()
   rectfill(0, 0, 128, 128, 3)
-  circfill(64, 40 + easeProp, 20, 15)
-  print("Function: "..tweenNames[index], 5, 120)
-  print("", 120, 120)
+  circfill(64, 40 + easeprop, 20, 15)
+  print("function: "..tweennames[index], 5, 120)
   print("⬅️ ➡️", 100, 120)
 end

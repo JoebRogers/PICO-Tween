@@ -35,6 +35,41 @@ cos1 = cos function cos(angle) return cos1(angle/(3.1415*2)) end
 --- Sin now uses radians
 sin1 = sin function sin(angle) return sin1(-angle/(3.1415*2)) end
 
+--- Implementation of asin.
+-- Source converted from 
+-- http://developer.download.nvidia.com/cg/asin.html
+function asin(x)
+  local negate = (x < 0 and 1.0 or 0.0)
+  x = abs(x)
+  local ret = -0.0187293
+  ret *= x
+  ret += 0.0742610
+  ret *= x
+  ret -= 0.2121144
+  ret *= x
+  ret += 1.5707288
+  ret = 3.14159265358979*0.5 - sqrt(1.0 - x)*ret
+  return ret - 2 * negate * ret
+end
+
+--- Implementation of acos.
+-- Source converted from 
+-- http://developer.download.nvidia.com/cg/acos.html
+function acos(x)
+  local negate = (x < 0 and 1.0 or 0.0)
+  x = abs(x);
+  local ret = -0.0187293;
+  ret *= x;
+  ret += 0.0742610;
+  ret *= x;
+  ret -= 0.2121144;
+  ret *= x;
+  ret += 1.5707288;
+  ret *= sqrt(1.0-x);
+  ret -= 2 * negate * ret;
+  return negate * 3.14159265358979 + ret;
+end
+
 --- Function for calculating 
 -- exponents to a higher degree
 -- of accuracy than using the
@@ -202,6 +237,69 @@ end
 function outInCirc(t, b, c, d)
   if (t < d / 2) return outCirc(t * 2, b, c / 2, d)
   return inCirc((t * 2) - d, b + c / 2, c / 2, d)
+end
+
+function inElastic(t, b, c, d, a, p)
+  if (t == 0) return b
+  t /= d
+  if (t == 1) return b + c
+  p = p or d * 0.3
+  local s
+
+  if not a or a < abs(c) then
+    a = c
+    s = p / 4
+  else
+    s = p / (2 * pi) * asin(c/a)
+  end
+
+  t -= 1
+  return -(a * pow(2, 10 * t) * sin((t * d - s) * (2 * pi) / p)) + b
+end
+
+function outElastic(t, b, c, d, a, p)
+  if (t == 0) return b
+  t /= d
+  if (t == 1) return b + c
+  p = p or d * 0.3
+  local s
+
+  if not a or a < abs(c) then
+    a = c
+    s = p / 4
+  else
+    s = p / (2 * pi) * asin(c/a)
+  end
+
+  return a * pow(2, -10 * t) * sin((t * d - s) * (2 * pi) / p) + c + b
+end
+
+function inOutElastic(t, b, c, d, a, p)
+  if (t == 0) return b
+  t = t / d * 2
+  if (t == 2) return b + c
+  p = p or d * (0.3 * 1.5)
+  a = a or 0
+  local s
+
+  if not a or a < abs(c) then
+    a = c
+    s = p / 4
+  else
+    s = p / (2 * pi) * asin(c / a)
+  end
+
+  if t < 1 then
+    t -= 1
+    return -0.5 * (a * pow(2, 10 * t) * sin((t * d - s) * (2 * pi) / p)) + b
+  end
+  t -= 1
+  return a * pow(2, -10 * t) * sin((t * d - s) * (2 * pi) / p ) * 0.5 + c + b
+end
+
+function outInElastic(t, b, c, d, a, p)
+  if (t < d / 2) return outElastic(t * 2, b, c / 2, d, a, p)
+  return inElastic((t * 2) - d, b + c / 2, c / 2, d, a, p)
 end
 
 function inBack(t, b, c, d, s)

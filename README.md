@@ -9,11 +9,14 @@ Some important things to note:
 - Despite being optimised, this library as a whole is still huge. It would be in your best interests to grab only
 the functions you plan on using, along with their support functions/variables.
 
-- The overall token count for the library is 1556, with an average of around 40-60 tokens per easing function.
+- The overall token count for the library is ~~1556~~ 2083, with an average of around 40-60 tokens per easing function.
 
-- This library has had the elastic easing functions removed as they relied on asin and acos, which are not
+- ~~This library has had the elastic easing functions removed as they relied on asin and acos, which are not
 available within the PICO-8. My math skills do not extend far enough for me to implement a solution for them 
-that doesn't rely on those functions.
+that doesn't rely on those functions.~~
+
+- Thanks to the Nvidea CG Toolkit references, the library now comes with implementations of asin and acos. This means
+that elastic easings have been reincluded and should be working as intended.
 
 - An important thing to note is that in order for the sine easings to work correctly, I've used the radian based
 conversion for the base sin and cos functions without the y inversion:
