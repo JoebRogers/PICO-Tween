@@ -91,7 +91,7 @@ You should get the following results:
 
 ## Examples
 
-You can find a test cart that allows you to cycle through all of the easing functions in the [cart](cart/pico-ec.p8) folder 
+You can find a test cart that allows you to cycle through all of the easing functions in the [cart](cart/pico-tween-demo.p8) folder 
 if you want to load it up into the console and play around with it!
 
 Here are some example gifs:
