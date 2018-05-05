@@ -27,6 +27,14 @@ sin1 = sin function sin(angle) return sin1(-angle/(3.1415*2)) end
 If you rely on sin and cos within your game and don't want to use radian based angles, then you'll need to adapt your
 input to the easing function accordingly to perform these calculations manually.
 
+## PICO-TweenMachine
+
+Alongside this library, I've also released an extension library to act as a support for this. It's a lightweight wrapper
+to help drive and manage all tween objects and related code in order to reduce boilerplate and mess, as well as simplify
+the process of creating and using tweens.
+
+You can view the repository here: [PICO-TweenMachine](https://github.com/JoebRogers/PICO-TweenMachine).
+
 ## Setup
 
 Like any PICO-8 library, integrating this library into your cart is as simple as copy/pasting the source
