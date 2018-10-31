@@ -1,3 +1,9 @@
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg)](https://github.com/JoebRogers/PICO-Tween/graphs/commit-activity) 
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://en.wikipedia.org/wiki/MIT_License) 
+[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://joebrogers.com) 
+[![Twitter Follow](https://img.shields.io/twitter/follow/JoebMakesGames.svg?style=social&label=Follow)](https://twitter.com/JoebMakesGames)
+[![Made With PICO-8](https://img.shields.io/badge/Made%20With-PICO--8-ff004d.svg)](https://www.lexaloffle.com/pico-8.php)
+
 ![PICO-Tween](img/logo.gif)
 
 PICO-Tween is a port of the easing functions developed by Robert Penner. This port was based on the Lua port by EmmanuelOga 
