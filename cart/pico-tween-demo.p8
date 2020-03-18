@@ -475,7 +475,7 @@ local currentfunc = downfunc
 local lasttime = time()
 local dt = 0
 
-function _update()
+function _update60()
   t = time()
   dt = t - lasttime
   lasttime = t
